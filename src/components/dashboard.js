@@ -129,7 +129,7 @@ class ComponenteContenedor extends HTMLElement {
                         </div>
                         <div class="content-area">
                             <div class="section-title">Agregados Recientemente</div>
-                            <lista-libros libros='${JSON.stringify(this.libros.slice(0, 4))}'></lista-libros>
+                            <lista-libros libros='${JSON.stringify(this.libros.slice(-4).reverse())}'></lista-libros>
                         </div>
                     </div>
 
