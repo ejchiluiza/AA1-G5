@@ -1,6 +1,6 @@
-// Nombre del archivo: dashboard.js
 
-// CAMBIO 1: Nombre de la clase actualizado
+
+
 class ComponenteContenedor extends HTMLElement {
     constructor() {
         super();
@@ -281,5 +281,4 @@ class ComponenteContenedor extends HTMLElement {
     }
 }
 
-// CAMBIO 2: Registramos el nuevo nombre de clase, pero mantenemos la etiqueta para que el HTML no rompa
 customElements.define('app-tablero', ComponenteContenedor);
