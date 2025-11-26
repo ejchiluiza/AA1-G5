@@ -1,19 +1,18 @@
-
-
-
-class ComponenteContenedor extends HTMLElement {
+// Nombre del archivo: dashboard.js
+class AppTablero extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         
         this.libros = JSON.parse(localStorage.getItem('libraryBooks')) || [
-            { id: 1, title: 'Cien años de soledad', author: 'Gabriel García Márquez', year: 1967, editorial: 'Sudamericana', status: 'disponible', prestadoA: '' },
-            { id: 2, title: 'Don Quijote', author: 'Cervantes', year: 1605, editorial: 'Francisco de Robles', status: 'prestado', prestadoA: 'Juan Pérez' },
-            { id: 3, title: '1984', author: 'George Orwell', year: 1949, editorial: 'Secker & Warburg', status: 'disponible', prestadoA: '' },
-            { id: 4, title: 'El principito', author: 'Saint-Exupéry', year: 1943, editorial: 'Reynal & Hitchcock', status: 'disponible', prestadoA: '' },
-            { id: 5, title: 'Clean Code', author: 'Robert C. Martin', year: 2008, editorial: 'Prentice Hall', status: 'disponible', prestadoA: '' },
-            { id: 6, title: 'Design Patterns', author: 'Erich Gamma', year: 1994, editorial: 'Addison-Wesley', status: 'prestado', prestadoA: 'Ana López' }
+            { id: 1, title: 'Cien años de soledad', author: 'Gabriel García Márquez', year: 1967, editorial: 'Sudamericana', status: 'disponible', prestadoA: 'Alex Canchignia' },
+            { id: 2, title: 'Don Quijote', author: 'Cervantes', year: 1605, editorial: 'Francisco de Robles', status: 'prestado', prestadoA: 'Edison Chiluiza' },
+            { id: 3, title: '1984', author: 'George Orwell', year: 1949, editorial: 'Secker & Warburg', status: 'disponible', prestadoA: 'Caterine Muzo' },
+            { id: 4, title: 'El principito', author: 'Saint-Exupéry', year: 1943, editorial: 'Reynal & Hitchcock', status: 'disponible', prestadoA: 'Caterine Muzo' },
+            { id: 5, title: 'Clean Code', author: 'Robert C. Martin', year: 2008, editorial: 'Prentice Hall', status: 'disponible', prestadoA: 'Sofía Rivas' },
+            { id: 6, title: 'Design Patterns', author: 'Erich Gamma', year: 1994, editorial: 'Addison-Wesley', status: 'prestado', prestadoA: 'Jessica Sanchez' }
         ];
+        // CAMBIO: Valor por defecto ahora es 'dashboard'
         this.vistaActual = 'dashboard';
         this.libroSeleccionado = null;
         this.libroAPrestarId = null;
@@ -55,6 +54,7 @@ class ComponenteContenedor extends HTMLElement {
         const librosPrestados = this.libros.filter(b => b.status === 'prestado').length;
         const autoresUnicos = new Set(this.libros.map(b => b.author)).size;
         
+        // CAMBIO: Variables renombradas a 'dashboard'
         const vDashboard = this.vistaActual === 'dashboard' ? '' : 'hidden';
         const vLibros = this.vistaActual === 'libros' ? '' : 'hidden';
         const vAgregar = this.vistaActual === 'agregar-libro' ? '' : 'hidden';
@@ -62,6 +62,13 @@ class ComponenteContenedor extends HTMLElement {
         const navDashboard = this.vistaActual === 'dashboard' ? 'active' : '';
         const navLibros = this.vistaActual === 'libros' ? 'active' : '';
         const navAgregar = this.vistaActual === 'agregar-libro' ? 'active' : '';
+
+        const titulos = {
+            'dashboard': 'Dashboard', // CAMBIO DE TEXTO
+            'libros': 'Gestión de Biblioteca',
+            'agregar-libro': this.libroSeleccionado ? 'Editar Libro' : 'Registro de Libros'
+        };
+        const tituloPagina = titulos[this.vistaActual] || 'Biblioteca';
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -89,10 +96,15 @@ class ComponenteContenedor extends HTMLElement {
                 }
                 
                 .nav-item { 
-                    padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 6px; 
-                    cursor: pointer; color: var(--text-light); font-weight: 500; 
-                    transition: all 0.2s; display: flex; align-items: center; gap: 10px;
-                }
+                   padding: 0.75rem 1rem; 
+                    margin-bottom: 0.5rem; 
+                    /* CAMBIO AQUÍ: Usar la variable global en lugar de '6px' */
+                    border-radius: var(--border-radius); 
+                    cursor: pointer; 
+                    color: var(--text-light); 
+                    font-weight: 500; 
+                    transition: all 0.2s; 
+                    display: flex; align-items: center; gap: 10px;}
                 
                 .nav-item:hover { background-color: #f8fafc; color: var(--primary-color); }
                 .nav-item.active { background-color: #e5e7eb; color: #111827; font-weight: 600; }
@@ -112,7 +124,7 @@ class ComponenteContenedor extends HTMLElement {
 
             <div class="dashboard">
                 <div class="sidebar">
-                    <div class="logo"><i class="fas fa-book-open" style="color: var(--primary-color);"></i> Mi Biblioteca</div>
+                    <div class="logo"><i class="fas fa-book-open" style="color: var(--primary-color);"></i>Biblioteca</div>
                     
                     <div class="nav-item ${navDashboard}" data-view="dashboard"><i class="fas fa-th-large"></i> Inicio</div>
                     <div class="nav-item ${navLibros}" data-view="libros"><i class="fas fa-list"></i> Gestión de Libros</div>
@@ -159,6 +171,7 @@ class ComponenteContenedor extends HTMLElement {
         this.configurarEventosVista();
     }
 
+    // --- MÉTODOS DE LÓGICA (Sin cambios) ---
     abrirModalPrestamo(libroId) {
         const libro = this.libros.find(b => b.id === libroId);
         if (libro) {
@@ -227,7 +240,8 @@ class ComponenteContenedor extends HTMLElement {
         this.libros.push(nuevoLibro);
         this.guardarEnLocalStorage();
         this.mostrarModal('Éxito', 'Libro ingresado al sistema');
-        this.cambiarVista('libros'); 
+        // CAMBIO: Redirige a 'dashboard' después de agregar, para ver el resumen
+        this.cambiarVista('dashboard'); 
     }
     
     actualizarLibro(datosLibro) {
@@ -281,4 +295,4 @@ class ComponenteContenedor extends HTMLElement {
     }
 }
 
-customElements.define('app-tablero', ComponenteContenedor);
+customElements.define('app-tablero', AppTablero);
